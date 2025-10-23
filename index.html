@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Islom Dini Haqida Test (Kengaytirilgan)</title>
+    <title>Islom Dini Testi (3 Daraja)</title>
     <style>
         /* --- Umumiy Stil --- */
         body {
@@ -47,6 +47,32 @@
             font-size: 1.1em;
             color: #666;
             margin-bottom: 30px;
+        }
+
+        .difficulty-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .difficulty-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 15px 25px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex: 1;
+            min-width: 120px;
+        }
+
+        .difficulty-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
         }
 
         /* --- Savol Ekrani --- */
@@ -166,9 +192,13 @@
     <main class="quiz-container">
         <!-- Boshlang'ich Ekran -->
         <section id="start-screen" class="screen active">
-            <h1>Islom Dini Haqida Test (Kengaytirilgan)</h1>
-            <p>Islom dini haqidagi chuqur bilimlaringizni tekshiring. Testda 30 ta savol bor. Vaqt cheklovi yo'q. Omad!</p>
-            <button id="start-btn" class="btn">Testni Boshlash</button>
+            <h1>Islom Dini Testi</h1>
+            <p>Iltimos, o'zingizga mos bo'lgan qiyinlik darajasini tanlang va bilimlaringizni sinab ko'ring!</p>
+            <div class="difficulty-buttons">
+                <button id="start-easy-btn" class="difficulty-btn">Osson</button>
+                <button id="start-medium-btn" class="difficulty-btn">Ortacha</button>
+                <button id="start-hard-btn" class="difficulty-btn">Qiyin</button>
+            </div>
         </section>
 
         <!-- Savol Ekrani -->
@@ -185,171 +215,118 @@
         <section id="results-screen" class="screen">
             <h2>Test Tugadi!</h2>
             <p id="score-text"></p>
-            <button id="restart-btn" class="btn">Qayta Boshlash</button>
+            <button id="restart-btn" class="btn">Bosh Sahifaga Qaytish</button>
         </section>
     </main>
 
     <script>
-        // --- Savollar Ma'lumotlari (30 ta) ---
-        const questions = [
-            {
-                question: "Payg'ambarimiz (s.a.v.) ning birinchi xotini kim bo'lgan?",
-                options: ["Oysha (r.a.)", "Xadicha (r.a.)", "Sauda (r.a.)", "Hafsa (r.a.)"],
-                correctAnswer: 1
-            },
-            {
-                question: "Qur'oni Karimning qaysi surasi 'Qur'on yuragi' deb ataladi?",
-                options: ["Al-Fotiha", "Yasin", "Al-Ixlos", "Al-Baqara"],
-                correctAnswer: 1
-            },
-            {
-                question: "Islomda qo'shcha nikoh (poligamiya) uchun ruxsat etilgan eng ko'p xotinlar soni nechta?",
-                options: ["2 ta", "3 ta", "4 ta", "Cheksiz"],
-                correctAnswer: 2
-            },
-            {
-                question: "\"Hijrat\" (Makkadan Madinaga ko'chish) qaysi milodiy yilda sodir bo'lgan?",
-                options: ["610 yil", "615 yil", "622 yil", "630 yil"],
-                correctAnswer: 2
-            },
-            {
-                question: "Vahiy farishtasining ismi nima?",
-                options: ["Mikoil (a.s.)", "Isrofil (a.s.)", "Azroil (a.s.)", "Jibril (a.s.)"],
-                correctAnswer: 3
-            },
-            {
-                question: "Qiyomat kunidan oldin paydo bo'ladigan yolg'on payg'ambarning ismi qanday?",
-                options: ["Dajjal", "Yajuj va Majuj", "Dabbo tul arz", "Zul-suhoq"],
-                correctAnswer: 0
-            },
-            {
-                question: "Namozda qo'llarni bog'lash (qofiy qilish) qaysi mazhabda 'sunnat' hisoblanadi?",
-                options: ["Hanafiy", "Shofe'iy", "Malikiy", "Hanbaliy"],
-                correctAnswer: 0
-            },
-            {
-                question: "Zakotning to'lanishi shart bo'lmagan quyidagilardan qaysi biri?",
-                options: ["Oltin va kumush", "Mol-mulk (qoramol, qo'y, echki)", "Dehqonchilik mahsuloti", "Shaxsiy yashash uyi"],
-                correctAnswer: 3
-            },
-            {
-                question: "\"Ihson\" so'zining ma'nosini to'g'ri ifodalovchi jumla?",
-                options: ["Yaxshilik qilish", "Allohni ko'rganday ibodat qilish", "Sabrli bo'lish", "Ko'p duo qilish"],
-                correctAnswer: 1
-            },
-            {
-                question: "Qur'oni Karimning eng uzun surasi qaysi?",
-                options: ["Al-Imron", "An-Niso", "Al-Baqara", "Al-Mo'ida"],
-                correctAnswer: 2
-            },
-            {
-                question: "Payg'ambarimiz (s.a.v.) ni vafot etgan yili qaysi xalifa tomonidan dafn etilgan?",
-                options: ["Abu Bakr (r.a.)", "Umar (r.a.)", "Usmon (r.a.)", "Ali (r.a.)"],
-                correctAnswer: 0
-            },
-            {
-                question: "\"Xandaq\" jangi qaysi yili bo'lib o'tgan?",
-                options: ["2 hijriy", "4 hijriy", "5 hijriy", "8 hijriy"],
-                correctAnswer: 2
-            },
-            {
-                question: "Tayammum qilish uchun tuproqqa tegish necha marta farzdir?",
-                options: ["Bir marta", "Ikki marta", "Uch marta", "To'rt marta"],
-                correctAnswer: 1
-            },
-            {
-                question: "Qur'oni Karim nozil bo'lgan birinchi shahar qaysi?",
-                options: ["Makka", "Madinai Munavvara", "Quddus", "Toif"],
-                correctAnswer: 0
-            },
-            {
-                question: "Islomning beshta asosini ('arkonul islom') sanab beruvchi mashhur hadis kim tomonidan rivoyat qilingan?",
-                options: ["Abu Hurayra (r.a.)", "Abdulloh ibn Abbos (r.a.)", "Umar ibn Xattob (r.a.)", "Aisha (r.a.)"],
-                correctAnswer: 2
-            },
-            {
-                question: "Juma namozining farzi necha rakat?",
-                options: ["2 rakat", "4 rakat", "6 rakat", "Juma namozi farzi yo'q, faqat sunnati bor"],
-                correctAnswer: 0
-            },
-            {
-                question: "Qur'oni Karimning qaysi surasi o'z nomi bilan boshlanmaydi, lekin 'Bismillah' bilan boshlanadi?",
-                options: ["Al-Fotiha", "At-Tauba", "Al-Baqara", "Yunus"],
-                correctAnswer: 1
-            },
-            {
-                question: "Aqida bo'yicha imonning shartlari nechta?",
-                options: ["5 ta", "6 ta", "7 ta", "9 ta"],
-                correctAnswer: 1
-            },
-            {
-                question: "Haj ibodatining asosiy marosimi bo'lmagan narsa?",
-                options: ["Ihromga kirish", "Arofatda turish", "Tavof qilish", "Zam-zam suvidan ichish"],
-                correctAnswer: 3
-            },
-            {
-                question: "Payg'ambarimiz (s.a.v.) ning laqabi qanday bo'lgan?",
-                options: ["Al-Amin (Ishonchli)", "As-Sodiq (To'g'ri so'zlovchi)", "Al-Faruq (O'rtani ajratuvchi)", "Abul-Qosim"],
-                correctAnswer: 0
-            },
-            {
-                question: "Qur'oni Karim necha yil davomida nozil bo'lgan?",
-                options: ["10 yil", "13 yil", "23 yil", "30 yil"],
-                correctAnswer: 2
-            },
-            {
-                question: "Sahobalarning birinchi xalifasi kim?",
-                options: ["Umar ibn Xattob (r.a.)", "Ali ibn Abu Tolib (r.a.)", "Abu Bakr as-Siddiq (r.a.)", "Usmon ibn Affon (r.a.)"],
-                correctAnswer: 2
-            },
-            {
-                question: "Namozni buzadigan narsalardan qaysi biri katta hadis (hadis-e akbar) hisoblanadi?",
-                options: ["Namozda gapirish", "Namozda yeyish", "Namozda kulish", "Namozda atrofga qarab yurish"],
-                correctAnswer: 1
-            },
-            {
-                question: "Taqvo so'zi qanday ma'noni anglatadi?",
-                options: ["Savob ishlash", "Allohdan qo'rqqan holda gunohlardan sa'lanish", "Ko'p ibodat qilish", "Faqirlikda yashash"],
-                correctAnswer: 1
-            },
-            {
-                question: "Qur'oni Karimning nechta 'Muttasil' (uzluksiz) surasi bor?",
-                options: ["Bitta", "Ikkita", "Uchta", "To'rtta"],
-                correctAnswer: 0
-            },
-            {
-                question: "Qibla qaysi tomon o'zgargan?",
-                options: ["Quddusdan Makkaga", "Makkadan Quddusga", "Shimoldan Janubga", "Sharqdan G'arbga"],
-                correctAnswer: 0
-            },
-            {
-                question: "Ramazon oyida qilingan namazning maxsus nomi qanday?",
-                options: ["Tahajjud", "Vitr", "Tarovih", "Duho"],
-                correctAnswer: 2
-            },
-            {
-                question: "Islom dinida o'limdan keyin qabr azobini isbotlovchi dalil qaysi manbada keltirilgan?",
-                options: ["Faqat Qur'onda", "Faqat Hadisda", "Faqqat Sahobalarning ijtihodida", "Qur'on va Hadisda"],
-                correctAnswer: 3
-            },
-            {
-                question: "Najosat (ifloslik) turlaridan qaysi biri 'og'ir najosat' (najosat g'aloza) hisoblanadi?",
-                options: ["Itning so'lak", "Chuvalchang", "Bola axlati", "Mushukning so'lak"],
-                correctAnswer: 0
-            },
-            {
-                question: "Qur'oni Karimda Allohning nechta ismi zikr qilingan?",
-                options: ["99 ta", "100 ta", "1000 dan ortiq", "Aniq soni ma'lum emas"],
-                correctAnswer: 0
-            }
-        ];
+        // --- Savollar Ma'lumotlari (Har bir darajada 30 tadan) ---
+        const allQuestions = {
+            easy: [
+                { question: "Islom dinining nechta ustuni bor?", options: ["3 ta", "4 ta", "5 ta", "6 ta"], correctAnswer: 2 },
+                { question: "Insoniyatga yuborilgan birinchi payg'ambar kim?", options: ["Ibrohim (a.s.)", "Muso (a.s.)", "Nuh (a.s.)", "Adam (a.s.)"], correctAnswer: 3 },
+                { question: "Musulmonlar uchun eng muqaddas kitob qaysi?", options: ["Zabur", "Tavrot", "Injil", "Qur'on"], correctAnswer: 3 },
+                { question: "Namoz vaqtlarini e'lon qilishga nima deyiladi?", options: ["Iqoma", "Azon", "Vaz", "Duo"], correctAnswer: 1 },
+                { question: "Ro'za tutish oyining nomi qanday?", options: ["Muharram", "Safar", "Ramazon", "Shavvol"], correctAnswer: 2 },
+                { question: "Musulmonlar qaysi tomonga qarab ibodat qilishadi?", options: ["Quyosh chiqish tomonga", "Qibla (Ka'ba) tomonga", "Shimol tomonga", "Janub tomonga"], correctAnswer: 1 },
+                { question: "Haj ibodati qaysi shaharda ado etiladi?", options: ["Madinai Munavvara", "Quddus", "Makka al-Mukarrama", "Bag'dod"], correctAnswer: 2 },
+                { question: "Payg'ambarimiz (s.a.v.) qayerda tug'ilganlar?", options: ["Madinada", "Makkada", "Quddusda", "Busroda"], correctAnswer: 1 },
+                { question: "Qur'oni Karim nechta suradan iborat?", options: ["104", "114", "124", "134"], correctAnswer: 1 },
+                { question: "Islom diniga ko'ra, nechta farishta bor?", options: ["4 ta", "5 ta", "6 ta", "Ular sanqsiz ko'p"], correctAnswer: 3 },
+                { question: "Qaysi hayvon Islomda najis hisoblanmaydi?", options: ["It", "Cho'chqa", "Mushuk", "Ilon"], correctAnswer: 2 },
+                { question: "Namozdan oldin qabul qilinadigan g'usul nima deyiladi?", options: ["Tayammum", "Vudu", "To'liq yuvinish", "Quloq teshish"], correctAnswer: 2 },
+                { question: "Qur'oni Karimning birinchi nozil bo'lgan surasi qaysi?", options: ["Al-Fotiha", "Al-Baqara", "Al-Alaq", "Al-Ixlos"], correctAnswer: 2 },
+                { question: "Qiyomat kunida amallar kitobi qo'lda beriladi?", options: ["O'ng qo'lda", "Chap qo'lda", "Ikkala qo'lda ham", "Hech qaysi qo'lda"], correctAnswer: 0 },
+                { question: "Musulmonlarning bayrami qaysi biri?", options: ["Navro'z", "Ramazon hayiti", "Yangi yil", "Mustaqillik kuni"], correctAnswer: 1 },
+                { question: "Ka'ba qaysi shaharda joylashgan?", options: ["Madinada", "Makkada", "Bag'dodda", "Qohirada"], correctAnswer: 1 },
+                { question: "Qur'oni Karim qaysi tilda nozil bo'lgan?", options: ["Ibroniy", "Lotin", "Arab", "Aramiy"], correctAnswer: 2 },
+                { question: "Payg'ambarimiz (s.a.v.) ning otasining ismi nima?", options: ["Abdulloh", "Abu Talib", "Abu Lahab", "Abbos"], correctAnswer: 0 },
+                { question: "Jannat darvoztaridan biri emas:", options: ["Rayyon", "Zin", "Jannat", "Bal'a"], correctAnswer: 2 },
+                { question: "Iymon kalimasi necha so'zdan iborat?", options: ["5 ta", "6 ta", "7 ta", "8 ta"], correctAnswer: 2 },
+                { question: "Zakot kimga beriladi?", options: ["Faqirga", "Miskinga", "Zakot ishchisiga", "Hammasiga to'g'ri"], correctAnswer: 3 },
+                { question: "Tavba qilish uchun qanday shartlar kerak emas?", options: ["Gunohni tark etish", "Qalbdan qayg'urish", "Hech qachon qaytmaslikka qasam ichish", "Boshqalarga gunohni yoyish"], correctAnswer: 3 },
+                { question: "Qaysi kun musulmonlar uchun eng muhim kun hisoblanadi?", options: ["Juma", "Seshanbe", "Payshanba", "Yakshanba"], correctAnswer: 0 },
+                { question: "Nasr surasi qanday turdagi sura?", options: ["Makkiy", "Madaniy", "Ikkalasi ham", "Ma'lum emas"], correctAnswer: 1 },
+                { question: "Islomda qo'llarni yuvish (vudu) necha marta farz?", options: ["Bir marta", "Ikki marta", "Uch marta", "To'rt marta"], correctAnswer: 1 },
+                { question: "Qur'oni Karimning eng qisqa surasi qaysi?", options: ["Al-Kavsar", "Al-Ixlos", "An-Nasr", "Al-Falaq"], correctAnswer: 0 },
+                { question: "Payg'ambarimiz (s.a.v.) necha yoshida vafot etganlar?", options: ["60 yoshda", "61 yoshda", "62 yoshda", "63 yoshda"], correctAnswer: 3 },
+                { question: "Qaysi o'simlik jannatda bo'ladi?", options: ["G'isha", "Zaytun", "Xurmo", "Hammasi to'g'ri"], correctAnswer: 3 },
+                { question: "Duo qilish qanday ibodat turiga kiradi?", options: ["Fard", "Vojib", "Sunnat", "Mustahab"], correctAnswer: 3 },
+                { question: "Islom dinining ramzi qanday rang?", options: ["Yashil", "Qizil", "Qora", "Oq"], correctAnswer: 0 }
+            ],
+            medium: [
+                { question: "Payg'ambarimiz (s.a.v.) ning birinchi xotini kim bo'lgan?", options: ["Oysha (r.a.)", "Xadicha (r.a.)", "Sauda (r.a.)", "Hafsa (r.a.)"], correctAnswer: 1 },
+                { question: "Qur'oni Karimning qaysi surasi 'Qur'on yuragi' deb ataladi?", options: ["Al-Fotiha", "Yasin", "Al-Ixlos", "Al-Baqara"], correctAnswer: 1 },
+                { question: "Islomda qo'shcha nikoh (poligamiya) uchun ruxsat etilgan eng ko'p xotinlar soni nechta?", options: ["2 ta", "3 ta", "4 ta", "Cheksiz"], correctAnswer: 2 },
+                { question: "\"Hijrat\" (Makkadan Madinaga ko'chish) qaysi milodiy yilda sodir bo'lgan?", options: ["610 yil", "615 yil", "622 yil", "630 yil"], correctAnswer: 2 },
+                { question: "Vahiy farishtasining ismi nima?", options: ["Mikoil (a.s.)", "Isrofil (a.s.)", "Azroil (a.s.)", "Jibril (a.s.)"], correctAnswer: 3 },
+                { question: "Qiyomat kunidan oldin paydo bo'ladigan yolg'on payg'ambarning ismi qanday?", options: ["Dajjal", "Yajuj va Majuj", "Dabbo tul arz", "Zul-suhoq"], correctAnswer: 0 },
+                { question: "Namozda qo'llarni bog'lash (qofiy qilish) qaysi mazhabda 'sunnat' hisoblanadi?", options: ["Hanafiy", "Shofe'iy", "Malikiy", "Hanbaliy"], correctAnswer: 0 },
+                { question: "Zakotning to'lanishi shart bo'lmagan quyidagilardan qaysi biri?", options: ["Oltin va kumush", "Mol-mulk (qoramol, qo'y, echki)", "Dehqonchilik mahsuloti", "Shaxsiy yashash uyi"], correctAnswer: 3 },
+                { question: "\"Ihson\" so'zining ma'nosini to'g'ri ifodalovchi jumla?", options: ["Yaxshilik qilish", "Allohni ko'rganday ibodat qilish", "Sabrli bo'lish", "Ko'p duo qilish"], correctAnswer: 1 },
+                { question: "Qur'oni Karimning eng uzun surasi qaysi?", options: ["Al-Imron", "An-Niso", "Al-Baqara", "Al-Mo'ida"], correctAnswer: 2 },
+                { question: "Payg'ambarimiz (s.a.v.) ni vafot etgan yili qaysi xalifa tomonidan dafn etilgan?", options: ["Abu Bakr (r.a.)", "Umar (r.a.)", "Usmon (r.a.)", "Ali (r.a.)"], correctAnswer: 0 },
+                { question: "\"Xandaq\" jangi qaysi yili bo'lib o'tgan?", options: ["2 hijriy", "4 hijriy", "5 hijriy", "8 hijriy"], correctAnswer: 2 },
+                { question: "Tayammum qilish uchun tuproqqa tegish necha marta farzdir?", options: ["Bir marta", "Ikki marta", "Uch marta", "To'rt marta"], correctAnswer: 1 },
+                { question: "Qur'oni Karim nozil bo'lgan birinchi shahar qaysi?", options: ["Makka", "Madinai Munavvara", "Quddus", "Toif"], correctAnswer: 0 },
+                { question: "Islomning beshta asosini ('arkonul islom') sanab beruvchi mashhur hadis kim tomonidan rivoyat qilingan?", options: ["Abu Hurayra (r.a.)", "Abdulloh ibn Abbos (r.a.)", "Umar ibn Xattob (r.a.)", "Aisha (r.a.)"], correctAnswer: 2 },
+                { question: "Juma namozining farzi necha rakat?", options: ["2 rakat", "4 rakat", "6 rakat", "Juma namozi farzi yo'q, faqat sunnati bor"], correctAnswer: 0 },
+                { question: "Qur'oni Karimning qaysi surasi o'z nomi bilan boshlanmaydi, lekin 'Bismillah' bilan boshlanadi?", options: ["Al-Fotiha", "At-Tauba", "Al-Baqara", "Yunus"], correctAnswer: 1 },
+                { question: "Aqida bo'yicha imonning shartlari nechta?", options: ["5 ta", "6 ta", "7 ta", "9 ta"], correctAnswer: 1 },
+                { question: "Haj ibodatining asosiy marosimi bo'lmagan narsa?", options: ["Ihromga kirish", "Arofatda turish", "Tavof qilish", "Zam-zam suvidan ichish"], correctAnswer: 3 },
+                { question: "Payg'ambarimiz (s.a.v.) ning laqabi qanday bo'lgan?", options: ["Al-Amin (Ishonchli)", "As-Sodiq (To'g'ri so'zlovchi)", "Al-Faruq (O'rtani ajratuvchi)", "Abul-Qosim"], correctAnswer: 0 },
+                { question: "Qur'oni Karim necha yil davomida nozil bo'lgan?", options: ["10 yil", "13 yil", "23 yil", "30 yil"], correctAnswer: 2 },
+                { question: "Sahobalarning birinchi xalifasi kim?", options: ["Umar ibn Xattob (r.a.)", "Ali ibn Abu Tolib (r.a.)", "Abu Bakr as-Siddiq (r.a.)", "Usmon ibn Affon (r.a.)"], correctAnswer: 2 },
+                { question: "Namozni buzadigan narsalardan qaysi biri katta hadis (hadis-e akbar) hisoblanadi?", options: ["Namozda gapirish", "Namozda yeyish", "Namozda kulish", "Namozda atrofga qarab yurish"], correctAnswer: 1 },
+                { question: "Taqvo so'zi qanday ma'noni anglatadi?", options: ["Savob ishlash", "Allohdan qo'rqqan holda gunohlardan sa'lanish", "Ko'p ibodat qilish", "Faqirlikda yashash"], correctAnswer: 1 },
+                { question: "Qur'oni Karimning nechta 'Muttasil' (uzluksiz) surasi bor?", options: ["Bitta", "Ikkita", "Uchta", "To'rtta"], correctAnswer: 0 },
+                { question: "Qibla qaysi tomon o'zgargan?", options: ["Quddusdan Makkaga", "Makkadan Quddusga", "Shimoldan Janubga", "Sharqdan G'arbga"], correctAnswer: 0 },
+                { question: "Ramazon oyida qilingan namozning maxsus nomi qanday?", options: ["Tahajjud", "Vitr", "Tarovih", "Duho"], correctAnswer: 2 },
+                { question: "Islom dinida o'limdan keyin qabr azobini isbotlovchi dalil qaysi manbada keltirilgan?", options: ["Faqat Qur'onda", "Faqat Hadisda", "Faqqat Sahobalarning ijtihodida", "Qur'on va Hadisda"], correctAnswer: 3 },
+                { question: "Najosat (ifloslik) turlaridan qaysi biri 'og'ir najosat' (najosat g'aloza) hisoblanadi?", options: ["Itning so'lak", "Chuvalchang", "Bola axlati", "Mushukning so'lak"], correctAnswer: 0 },
+                { question: "Qur'oni Karimda Allohning nechta ismi zikr qilingan?", options: ["99 ta", "100 ta", "1000 dan ortiq", "Aniq soni ma'lum emas"], correctAnswer: 0 }
+            ],
+            hard: [
+                { question: "Fiqhda 'istihsan' (yaxshilash) usuli qaysi mazhbuga xos?", options: ["Hanafiy", "Shofe'iy", "Malikiy", "Hanbaliy"], correctAnswer: 0 },
+                { question: "\"Kursiy\" oyati qaysi surada joylashgan?", options: ["Al-Baqara", "Al-Imron", "An-Niso", "Al-Mo'ida"], correctAnswer: 0 },
+                { question: "Sahobalardan qaysi biri Qur'onni to'plash uchun komissiya boshlig'i bo'lgan?", options: ["Ali ibn Abu Tolib (r.a.)", "Umar ibn Xattob (r.a.)", "Zayd ibn Sobit (r.a.)", "Abu Bakr as-Siddiq (r.a.)"], correctAnswer: 2 },
+                { question: "Qur'oni Karimning qaysi surasi o'z nomi bilan boshlanadi?", options: ["Al-Fotiha", "Yunus", "Yusuf", "Barchasi to'g'ri"], correctAnswer: 2 },
+                { question: "Islom tarixida 'Murtadlar jangi' qaysi xalifa davrida bo'lib o'tgan?", options: ["Abu Bakr (r.a.)", "Umar (r.a.)", "Usmon (r.a.)", "Ali (r.a.)"], correctAnswer: 0 },
+                { question: "Qiyomat kuni paydo bo'ladigan 'Dabbo tul arz' nima?", options: ["Yer qiyzishi", "Yerni chayqatadigan hayvon", "Katta olov", "Qorong'ilik"], correctAnswer: 1 },
+                { question: "Imom Shofe'iyning to'liq ismi qanday?", options: ["Muhammad ibn Idris", "Abu Hanifa", "Ahmad ibn Hanbal", "Malik ibn Anas"], correctAnswer: 0 },
+                { question: "Qur'oni Karimning 'Muqatta'at' (qisqa harflar) bilan boshlanadigan nechta surasi bor?", options: ["19", "29", "39", "49"], correctAnswer: 1 },
+                { question: "Hajr asvod (Qora tosh) qaysi payg'ambar tomonidan Ka'ba devoriga o'rnatilgan?", options: ["Ibrohim (a.s.) va Ismoil (a.s.)", "Adam (a.s.)", "Muhammad (s.a.v.)", "Nuh (a.s.)"], correctAnswer: 0 },
+                { question: "Fiqhda 'maslaha' (manfaat) asosini qaysi mazhab keng qo'llaydi?", options: ["Hanafiy", "Shofe'iy", "Malikiy", "Hanbaliy"], correctAnswer: 2 },
+                { question: "Qur'oni Karimning qaysi surasi 'Bani Isroil' deb ham ataladi?", options: ["Al-Baqara", "Yunus", "Hud", "Bani Isroil"], correctAnswer: 3 },
+                { question: "Usmon (r.a.) ning Qur'onni nusxalash loyihasi qaysi voqea sabab bo'lgan?", options: ["Ridda urushlari", "Siffin jangi", "Yamama jangi", "Kavkaz jangi"], correctAnswer: 2 },
+                { question: "Imom Buxoriyning 'Al-Jome' as-Sahih' asarida nechta hadis bor?", options: ["7563", "9200", "7275", "4000"], correctAnswer: 0 },
+                { question: "Namozning qaysi rakati birinchi bo'lib farz qilingan?", options: ["Bomdod", "Peshin", "Asr", "Shom"], correctAnswer: 1 },
+                { question: "Aqida bo'yicha 'Kasb' (kazib olish) haqidagi qarash qaysi olim bilan bog'liq?", options: ["Abu Hanifa", "Al-Maturidiy", "Al-Ash'ariy", "Ibn Taymiya"], correctAnswer: 1 },
+                { question: "Qur'oni Karimning 'Al-Insan' surasining boshqa nomi qanday?", options: ["Ad-Dahr", "Al-Muddassir", "Al-Muzzammil", "Al-Ma'un"], correctAnswer: 0 },
+                { question: "Qaysi sahoba Qur'onni birinchi bo'lib xotiradan yozib olgan?", options: ["Abu Bakr (r.a.)", "Umar (r.a.)", "Ali (r.a.)", "Zayd ibn Sobit (r.a.)"], correctAnswer: 2 },
+                { question: "Islom huquqshunosligida 'Vaqf' nima degani?", options: ["Zakot", "Xayriya", "Alloh yo'lida doimiy hadya etilgan mulk", "Qarz"], correctAnswer: 2 },
+                { question: "Imom G'azzoliyning mashhur asari qaysi?", options: ["Ihyo ulumiddin", "Shifo", "Al-Muvatta", "Sahih Buxoriy"], correctAnswer: 0 },
+                { question: "Qur'oni Karimning nechta surasi 'musabbihat' (Allohni tasbehlaydigan suralar) guruhiga kiradi?", options: ["5", "6", "7", "8"], correctAnswer: 2 },
+                { question: "Buxoro xalifaligi qaysi sulola tomonidan boshqarilgan?", options: ["Umaviylar", "Abbosiylar", "Safforiylar", "Somoniylar"], correctAnswer: 3 },
+                { question: "Fiqhda 'iymon' va 'islom' o'rtasidagi farqni qayta ko'rib chiqish harakati qaysi olimlar bilan bog'liq?", options: ["Maturidiylar", "Ash'ariylar", "Murji'alar", "Mu'tazilalar"], correctAnswer: 2 },
+                { question: "Qur'oni Karimning 'Al-Mulk' surasi qanday nom bilan ham tanilgan?", options: ["Taborak", "Mani'a", "Al-Muavviza", "Al-Jomi'a"], correctAnswer: 0 },
+                { question: "Qaysi hadis to'plami 'Kutubi Sitta' (olti asosiy kitob) tarkibiga kiradi?", options: ["Sahih Buxoriy", "Muvatta Imom Malik", "Musnad Ahmad", "Hammasi"], correctAnswer: 0 },
+                { question: "Islom falsafasida 'Falsafa' so'ziga qarshi chiqqan mashhur olim kim?", options: ["Imom G'azzoliy", "Ibn Sino", "Al-Farobiy", "Ibn Rushd"], correctAnswer: 0 },
+                { question: "Namozdagi 'Qavma' (tiklanish) holati qaysi rakatda faqat bir marta amalga oshiriladi?", options: ["Bomdodning 2-rakati", "Peshinning 1-rakati", "Juma namozining farzi", "Janoza namozida"], correctAnswer: 3 },
+                { question: "Qur'oni Karimning 'Al-Ma'un' surasi qanday turdagi gunohlarni qoralaydi?", options: ["Shirk", "Riya", "Qo'shnini qoralash", "Yetimni zo'rlash, kambag'allarni ovorat qilish"], correctAnswer: 3 },
+                { question: "Usmon (r.a.) ning Qur'on nusxalarini (mus'haf) islom olamining yirik shaharlariga yuborishining asosiy sababi nima edi?", options: ["Sharaflash uchun", "Til va qiroatdagi farqlarni bartaraf etish uchun", "Savdo-sotiqni rivojlantirish uchun", "Yangi shaharlarni musulmonlashtirish uchun"], correctAnswer: 1 },
+                { question: "Imom Shofe'iy qaysi ikki mazhab asoschisidan fiqh ilmini o'rgangan?", options: ["Abu Hanifa va Ahmad ibn Hanbal", "Malik ibn Anas va Muhammad ibn Hasan ash-Shayboniy", "Sufyon as-Savriy va Layth ibn Sa'd", "Avzo'iy va Ibn Abu Layla"], correctAnswer: 1 }
+            ]
+        };
 
         // --- Elementlarni Olish ---
         const startScreen = document.getElementById('start-screen');
         const questionScreen = document.getElementById('question-screen');
         const resultsScreen = document.getElementById('results-screen');
 
-        const startBtn = document.getElementById('start-btn');
+        const startEasyBtn = document.getElementById('start-easy-btn');
+        const startMediumBtn = document.getElementById('start-medium-btn');
+        const startHardBtn = document.getElementById('start-hard-btn');
         const nextBtn = document.getElementById('next-btn');
         const restartBtn = document.getElementById('restart-btn');
 
@@ -361,17 +338,21 @@
         // --- O'zgaruvchilar ---
         let currentQuestionIndex = 0;
         let score = 0;
+        let questions = []; // Tanlangan darajadagi savollar shu yerga yuklanadi
 
         // --- Event Listenerlar ---
-        startBtn.addEventListener('click', startQuiz);
+        startEasyBtn.addEventListener('click', () => startQuiz('easy'));
+        startMediumBtn.addEventListener('click', () => startQuiz('medium'));
+        startHardBtn.addEventListener('click', () => startQuiz('hard'));
         nextBtn.addEventListener('click', showNextQuestion);
         restartBtn.addEventListener('click', resetQuiz);
 
         // --- Funksiyalar ---
 
-        function startQuiz() {
+        function startQuiz(difficulty) {
             startScreen.classList.remove('active');
             questionScreen.classList.add('active');
+            questions = allQuestions[difficulty]; // Tanlangan darajadagi savollarni yuklash
             currentQuestionIndex = 0;
             score = 0;
             showQuestion();
@@ -405,14 +386,14 @@
             const correctAnswerIndex = currentQuestion.correctAnswer;
             
             const buttons = optionsContainer.querySelectorAll('.option-btn');
-            buttons.forEach(btn => btn.classList.add('disabled')); // Barcha tugmalarni bloklash
+            buttons.forEach(btn => btn.classList.add('disabled'));
 
             if (index === correctAnswerIndex) {
                 buttons[index].classList.add('correct');
                 score++;
             } else {
                 buttons[index].classList.add('incorrect');
-                buttons[correctAnswerIndex].classList.add('correct'); // To'g'ri javobni ko'rsatish
+                buttons[correctAnswerIndex].classList.add('correct');
             }
             
             nextBtn.disabled = false;
@@ -440,6 +421,7 @@
             startScreen.classList.add('active');
             currentQuestionIndex = 0;
             score = 0;
+            questions = [];
         }
         
         function updateProgressBar() {
